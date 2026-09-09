@@ -1,0 +1,13 @@
+# Not macOS? Skip this. On a Mac you can still try tinydocker inside Linux:
+#
+#   docker build -f examples/Dockerfile.tryit -t tinydocker-tryit .
+#   docker run --rm -it --privileged tinydocker-tryit          # then run examples/demo.sh
+#   docker run --rm --privileged tinydocker-tryit pytest -q    # or the test suite
+#
+FROM python:3.12-slim
+RUN apt-get update && apt-get install -y --no-install-recommends busybox-static \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY . .
+RUN pip install --no-cache-dir -e ".[dev]"
+CMD ["bash", "examples/demo.sh"]
